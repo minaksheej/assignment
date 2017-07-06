@@ -74,13 +74,13 @@ public class MaxSatisfactionCalculator {
 			});
 			List<String> satisfactionList = new ArrayList<>(keys);
 			if (satisfactionList.size() == 2) {
-				result="Max satisfaction :" + maxSatisfaction + " recived by " + satisfactionList.get(0)
+				result="Max satisfaction :" + maxSatisfaction + " received by " + satisfactionList.get(0)
 						+ " AND " + satisfactionList.get(1);
 				System.out.println(result);
 				
 				System.out.println("result");
 			} else if (satisfactionList.size() == 1) {
-				result="Max satisfaction :" + timeLimit + " recived by " + satisfactionList.get(0);
+				result="Max satisfaction :" + timeLimit + " received by " + satisfactionList.get(0);
 				System.out.println(result);
 			}
 
