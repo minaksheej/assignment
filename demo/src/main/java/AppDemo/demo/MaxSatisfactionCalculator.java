@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MaxSatisfactionCalculator {
 
-	 int timeToEat = 5;
-	static int timeLimit = 35;
+	int timeToEat = 5;
+	static int timeLimit = 35;//time limit to eat
 
+	/*
+	 * findSatisfaction calculate max satisfaction in a given time limit 
+	 */
 	@RequestMapping(value = "/demo", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
 	public  String  findSatisfaction() {
 		String result = null;
@@ -89,6 +92,9 @@ public class MaxSatisfactionCalculator {
 
 	}
 
+	/*
+	 * menuItems will read the local file having item1,item2.......itemN
+	 */
 	private static Set<String> menuItems() {
 		BufferedReader bufReader = null;
 		Set<String> listOfLines = new HashSet<>();
@@ -114,7 +120,9 @@ public class MaxSatisfactionCalculator {
 		}
 		return listOfLines;
 	}
-
+    /*
+     * getLargestMap will fetch largest and second largest time value from the time to eat list
+     */
 	private static Map<String, Integer> getLargestMap(List<Integer> timeList) {
 		Map<String, Integer> largestMap = new HashMap<>();
 		int secondLargest = (int) timeList.get(0);
