@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MaxSatisfactionCalculator {
 
-	int timeToEat = 5;
+	
 
 	/*
 	 * findSatisfaction calculate max satisfaction in a given time limit
