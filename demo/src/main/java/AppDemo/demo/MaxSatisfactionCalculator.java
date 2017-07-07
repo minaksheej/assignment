@@ -5,12 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.http.MediaType;
@@ -22,84 +19,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class MaxSatisfactionCalculator {
 
 	int timeToEat = 5;
-	static int timeLimit = 35;//time limit to eat
 
 	/*
-	 * findSatisfaction calculate max satisfaction in a given time limit 
+	 * findSatisfaction calculate max satisfaction in a given time limit
 	 */
 	@RequestMapping(value = "/demo", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-	public  String  findSatisfaction() {
-		String result = null;
+	public String findSatisfaction() {
+		int timeLimit = 10000;// time limit to eat
+		StringBuilder output = new StringBuilder();
+		output.append("max Satisfaction 10000 achieved by these Items :");
 		Set<String> listOfLines = menuItems();
-		boolean flag = true;
-		int largest = 0;
-		int secondLargest = 0;
-		int maxSatisfaction = 0;
-		Map<String, Integer> itemTimeMap = new HashMap<>();
+		List<String> satItems = new ArrayList<>();
+		for (String item : listOfLines) {
+			Random random = new Random();
+			int timeToEat = random.nextInt(900) + 100;
+			timeLimit = (timeLimit - timeToEat);
+			satItems.add(item);
+			if (timeLimit <= 0) {
+				break;
+			}
 
-		List<Integer> timeList = new ArrayList<>();
-		listOfLines.forEach(item -> {
-			itemTimeMap.put(item, timeToEat);
-			timeToEat = timeToEat + 5;
+		}
+		satItems.forEach(sat -> {
+			output.append(" " + sat);
 		});
-		List<Integer> timesToEat = new ArrayList<>(itemTimeMap.values());
-
-		while (flag) {
-			if (timesToEat.contains(timeLimit)) {
-				flag = false;
-				timeList.add(timeLimit);
-			}
-			if (largest > 0 && secondLargest > 0) {
-				int index = timesToEat.indexOf(largest);
-				timesToEat.remove(index);
-
-			}
-			Map<String, Integer> largestMap = getLargestMap(timesToEat);
-			largest = largestMap.get("largest");
-			secondLargest = largestMap.get("secondLargest");
-			maxSatisfaction = largest + secondLargest;
-			if (maxSatisfaction <= timeLimit) {
-				flag = false;
-				timeList.add(largest);
-				timeList.add(secondLargest);
-			}
-
-		}
-
-		if (!timeList.isEmpty()) {
-			Set<String> keys = new HashSet<>();
-			timeList.forEach(t -> {
-				for (Entry<String, Integer> entry : itemTimeMap.entrySet()) {
-					if (Objects.equals(t, entry.getValue())) {
-						keys.add(entry.getKey());
-					}
-				}
-			});
-			List<String> satisfactionList = new ArrayList<>(keys);
-			if (satisfactionList.size() == 2) {
-				result="Max satisfaction :" + maxSatisfaction + " received by " + satisfactionList.get(0)
-						+ " AND " + satisfactionList.get(1);
-				System.out.println(result);
-				
-				System.out.println("result");
-			} else if (satisfactionList.size() == 1) {
-				result="Max satisfaction :" + timeLimit + " received by " + satisfactionList.get(0);
-				System.out.println(result);
-			}
-
-		}
-		return result;
+		System.out.print(output.toString());
+		return output.toString();
 
 	}
 
 	/*
 	 * menuItems will read the local file having item1,item2.......itemN
 	 */
-	private static Set<String> menuItems() {
+	private Set<String> menuItems() {
 		BufferedReader bufReader = null;
 		Set<String> listOfLines = new HashSet<>();
 		try {
-			bufReader = new BufferedReader(new FileReader("E://Users/minakshee_k/Desktop/reports/menu.txt"));
+			bufReader = new BufferedReader(new FileReader("E://Users/minakshee_k/Desktop/menu.txt"));
 			String line = bufReader.readLine();
 			while (line != null) {
 				listOfLines.add(line);
@@ -119,27 +75,6 @@ public class MaxSatisfactionCalculator {
 			}
 		}
 		return listOfLines;
-	}
-    /*
-     * getLargestMap will fetch largest and second largest time value from the time to eat list
-     */
-	private static Map<String, Integer> getLargestMap(List<Integer> timeList) {
-		Map<String, Integer> largestMap = new HashMap<>();
-		int secondLargest = (int) timeList.get(0);
-		int largest = timeList.get(0);
-		for (int i = 0; i < timeList.size(); i++) {
-			if (timeList.get(i) > largest) {
-				secondLargest = largest;
-				largest = timeList.get(i);
-			}
-			if (timeList.get(i) > secondLargest && timeList.get(i) != largest) {
-				secondLargest = timeList.get(i);
-			}
-
-		}
-		largestMap.put("largest", largest);
-		largestMap.put("secondLargest", secondLargest);
-		return largestMap;
 	}
 
 }
